@@ -37,6 +37,15 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
 #-----------------------------------------------------------------------------
 # platform specifics
 
+if (UNIX)
+
+add_definitions(
+	-DHAVE_GETIFADDRS
+	-DHAVE_GETTIMEOFDAY
+)
+
+else()
+
 add_definitions(
 	-DWIN32
 	-D_CRT_SECURE_NO_WARNINGS
@@ -49,11 +58,15 @@ add_definitions(
 	-DUSE_BIND_INADDR_ANY
 )
 
+endif()
+
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	add_definitions(
 		-DPGM_DEBUG
 	)
 endif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+if (MSVC)
 
 # Enables the use of Intel Advanced Vector Extensions 2 instructions.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /arch:AVX2")
@@ -67,6 +80,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
 set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
+
+endif()
 
 #-----------------------------------------------------------------------------
 # source files
@@ -186,8 +201,14 @@ add_executable(purinrecv examples/purinrecv.c examples/getopt.c examples/getopt_
 target_link_libraries(purinrecv libpgm)
 add_executable(daytime examples/daytime.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(daytime libpgm)
+if (NOT MSVC)
+target_link_libraries(daytime pthread)
+endif()
 add_executable(shortcakerecv examples/shortcakerecv.c examples/async.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(shortcakerecv libpgm)
+if (NOT MSVC)
+target_link_libraries(shortcakerecv pthread)
+endif()
 
 #-----------------------------------------------------------------------------
 # installer
