@@ -48,7 +48,6 @@ else()
 
 add_definitions(
 	-DWIN32
-	-D_CRT_SECURE_NO_WARNINGS
 	-D_WINSOCK_DEPRECATED_NO_WARNINGS
 	-DHAVE_FTIME
 	-DHAVE_ISO_VARARGS
@@ -58,6 +57,19 @@ add_definitions(
 	-DUSE_BIND_INADDR_ANY
 )
 
+if (MINGW)
+
+add_definitions(
+	-DAI_ADDRCONFIG=0x20
+)
+
+else()
+
+add_definitions(
+	-D_CRT_SECURE_NO_WARNINGS
+)
+
+endif()
 endif()
 
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -80,6 +92,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /GL")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE} /LTCG")
 set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS_RELEASE} /LTCG")
 set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS_RELEASE} /LTCG")
+
+else()
+
+set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -mavx2")
 
 endif()
 
@@ -197,17 +213,29 @@ set_target_properties(libpgm PROPERTIES
 
 add_executable(purinsend examples/purinsend.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(purinsend libpgm)
+if (WIN32)
+target_link_libraries(purinsend ws2_32 iphlpapi winmm)
+endif()
 add_executable(purinrecv examples/purinrecv.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(purinrecv libpgm)
+if (WIN32)
+target_link_libraries(purinrecv ws2_32 iphlpapi winmm)
+endif()
 add_executable(daytime examples/daytime.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(daytime libpgm)
 if (NOT MSVC)
 target_link_libraries(daytime pthread)
 endif()
+if (WIN32)
+target_link_libraries(daytime ws2_32 iphlpapi winmm)
+endif()
 add_executable(shortcakerecv examples/shortcakerecv.c examples/async.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(shortcakerecv libpgm)
 if (NOT MSVC)
 target_link_libraries(shortcakerecv pthread)
+endif()
+if (WIN32)
+target_link_libraries(shortcakerecv ws2_32 iphlpapi winmm)
 endif()
 
 #-----------------------------------------------------------------------------
@@ -216,7 +244,7 @@ endif()
 set(docs
 	COPYING
 	LICENSE
-	README
+	README.md
 )
 file(GLOB mibs "${CMAKE_CURRENT_SOURCE_DIR}/mibs/*.txt")
 set(examples

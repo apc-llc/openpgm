@@ -29,7 +29,7 @@
 #ifndef __PGM_IMPL_BYTEORDER_H__
 #define __PGM_IMPL_BYTEORDER_H__
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 #	include <ws2tcpip.h>
 #elif defined (__APPLE__)
 #	include <libkern/OSByteOrder.h>
@@ -45,7 +45,7 @@ PGM_BEGIN_DECLS
 static inline
 uint16_t
 pgm_byteswap16 (uint16_t x) {
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	return _byteswap_ushort (x);
 #elif defined (__APPLE__)
 	return OSSwapInt16 (x);
@@ -57,7 +57,7 @@ pgm_byteswap16 (uint16_t x) {
 static inline
 uint32_t
 pgm_byteswap32 (uint32_t x) {
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) || defined(__MINGW32__)
 	return _byteswap_ulong (x);
 #elif defined (__APPLE__)
 	return OSSwapInt32 (x);
