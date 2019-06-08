@@ -3,6 +3,8 @@
 cmake_minimum_required (VERSION 3.6.0)
 project (OpenPGM)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 #-----------------------------------------------------------------------------
 # force off-tree build
 
