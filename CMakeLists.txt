@@ -6,7 +6,7 @@ project (OpenPGM)
 #-----------------------------------------------------------------------------
 # force off-tree build
 
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+if(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 message(FATAL_ERROR "CMake generation is not allowed within the source directory! 
 Remove the CMakeCache.txt file and try again from another folder, e.g.: 
 
@@ -15,12 +15,12 @@ Remove the CMakeCache.txt file and try again from another folder, e.g.:
    cd cmake-make
    cmake ..
 ")
-endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
+endif(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
 
 #-----------------------------------------------------------------------------
 # dependencies
 
-include (${CMAKE_SOURCE_DIR}/cmake/Modules/TestOpenPGMVersion.cmake)
+include (${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules/TestOpenPGMVersion.cmake)
 
 #-----------------------------------------------------------------------------
 # default to Release build
@@ -31,8 +31,8 @@ if(NOT CMAKE_BUILD_TYPE)
       FORCE)
 endif(NOT CMAKE_BUILD_TYPE)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 #-----------------------------------------------------------------------------
 # platform specifics
@@ -260,28 +260,28 @@ set(examples
 
 # CPack now requires either .txt or .rtf license file.
 add_custom_command(
-	OUTPUT ${CMAKE_BINARY_DIR}/LICENSE.txt
+	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt
 	COMMAND ${CMAKE_COMMAND}
 	ARGS    -E
 		copy
-		${CMAKE_SOURCE_DIR}/LICENSE
-		${CMAKE_BINARY_DIR}/LICENSE.txt
-	DEPENDS ${CMAKE_SOURCE_DIR}/LICENSE
+		${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
+		${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt
+		DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE
 )
-set (CMAKE_MODULE_PATH "${CMAKE_BINARY_DIR}")
+set (CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
 install (TARGETS libpgm DESTINATION lib)
 install (TARGETS purinsend purinrecv daytime shortcakerecv DESTINATION bin)
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	install (
-		FILES ${CMAKE_BINARY_DIR}/lib/libpgm${_pgm_COMPILER}-mt-gd-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.pdb
+		FILES ${CMAKE_CURRENT_BINARY_DIR}/lib/libpgm${_pgm_COMPILER}-mt-gd-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}.pdb
 		DESTINATION lib
 	)
 endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 install (FILES ${headers} DESTINATION include/pgm)
 foreach (doc ${docs})
-	configure_file (${CMAKE_SOURCE_DIR}/${doc} ${CMAKE_BINARY_DIR}/${doc}.txt)
-	install (FILES ${CMAKE_BINARY_DIR}/${doc}.txt DESTINATION doc)
+	configure_file (${CMAKE_CURRENT_SOURCE_DIR}/${doc} ${CMAKE_CURRENT_BINARY_DIR}/${doc}.txt)
+	install (FILES ${CMAKE_CURRENT_BINARY_DIR}/${doc}.txt DESTINATION doc)
 endforeach (doc ${docs})
 install (FILES ${mibs} DESTINATION mibs)
 install (FILES ${examples} DESTINATION examples)
@@ -289,8 +289,8 @@ install (FILES ${examples} DESTINATION examples)
 # Only need to ship CRT if distributing executable binaries.
 # include (InstallRequiredSystemLibraries)
 set (CPACK_INSTALL_CMAKE_PROJECTS
-		"${CMAKE_SOURCE_DIR}/build/v140;OpenPGM;ALL;/"
-		"${CMAKE_SOURCE_DIR}/build/v120;OpenPGM;ALL;/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/build/v140;OpenPGM;ALL;/"
+	"${CMAKE_CURRENT_SOURCE_DIR}/build/v120;OpenPGM;ALL;/"
 )
 set (CPACK_PACKAGE_VENDOR "Miru")
 set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_BINARY_DIR}/LICENSE.txt")
