@@ -635,7 +635,7 @@ pgm_sockaddr_join_group (
  * socket option, such that testing is deferred to Autoconf.
  */
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_JOIN_GROUP, (const char*)gr, sizeof(struct group_req));
+	retval = setsockopt (s, recv_level, PGM_JOIN_GROUP, (const char*)gr, sizeof(struct group_req));
 #else
 	switch (sa_family) {
 	case AF_INET: {
@@ -716,7 +716,7 @@ pgm_sockaddr_leave_group (
 	int retval = SOCKET_ERROR;
 #if defined( HAVE_STRUCT_GROUP_REQ ) || ( defined( _WIN32 ) && ( _WIN32_WINNT >= 0x0600 ) )
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_LEAVE_GROUP, (const char*)gr, sizeof(struct group_req));
+	retval = setsockopt (s, recv_level, PGM_LEAVE_GROUP, (const char*)gr, sizeof(struct group_req));
 #else
 	switch (sa_family) {
 	case AF_INET: {
@@ -772,7 +772,7 @@ pgm_sockaddr_block_source (
 	int retval = SOCKET_ERROR;
 #if defined( HAVE_STRUCT_GROUP_REQ ) || ( defined( _WIN32 ) && ( _WIN32_WINNT >= 0x0600 ) )
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_BLOCK_SOURCE, (const char*)gsr, sizeof(struct group_source_req));
+	retval = setsockopt (s, recv_level, PGM_BLOCK_SOURCE, (const char*)gsr, sizeof(struct group_source_req));
 #elif defined( IP_BLOCK_SOURCE )
 	switch (sa_family) {
 	case AF_INET: {
@@ -817,7 +817,7 @@ pgm_sockaddr_unblock_source (
 	int retval = SOCKET_ERROR;
 #if defined( HAVE_STRUCT_GROUP_REQ ) || ( defined( _WIN32 ) && ( _WIN32_WINNT >= 0x0600 ) )
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_UNBLOCK_SOURCE, (const char*)gsr, sizeof(struct group_source_req));
+	retval = setsockopt (s, recv_level, PGM_UNBLOCK_SOURCE, (const char*)gsr, sizeof(struct group_source_req));
 #elif defined( IP_UNBLOCK_SOURCE )
 	switch (sa_family) {
 	case AF_INET: {
@@ -881,7 +881,7 @@ pgm_sockaddr_join_source_group (
  * RFC3678: Argument type struct group_source_req
  */
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_JOIN_SOURCE_GROUP, (const char*)gsr, sizeof(struct group_source_req));
+	retval = setsockopt (s, recv_level, PGM_JOIN_SOURCE_GROUP, (const char*)gsr, sizeof(struct group_source_req));
 #elif defined( IP_ADD_SOURCE_MEMBERSHIP )
 	switch (sa_family) {
 	case AF_INET: {
@@ -937,7 +937,7 @@ pgm_sockaddr_leave_source_group (
 	int retval = SOCKET_ERROR;
 #if defined( HAVE_STRUCT_GROUP_REQ ) || ( defined( _WIN32 ) && ( _WIN32_WINNT >= 0x0600 ) )
 	const int recv_level = (AF_INET == sa_family) ? SOL_IP : SOL_IPV6;
-	retval = setsockopt (s, recv_level, MCAST_LEAVE_SOURCE_GROUP, (const char*)gsr, sizeof(struct group_source_req));
+	retval = setsockopt (s, recv_level, PGM_LEAVE_SOURCE_GROUP, (const char*)gsr, sizeof(struct group_source_req));
 #elif defined( IP_ADD_SOURCE_MEMBERSHIP )
 	switch (sa_family) {
 	case AF_INET: {
@@ -993,7 +993,7 @@ pgm_sockaddr_msfilter (
 	const socklen_t len = GROUP_FILTER_SIZE(gf_list->gf_numsrc);
 	u_long* filter = pgm_alloca (len);
 	memcpy (filter, gf_list, len);
-	retval = ioctlsocket (s, SIOCSMSFILTER, filter);
+	retval = ioctlsocket (s, PGM_MSFILTER, filter);
 #elif defined( HAVE_STRUCT_IP_MSFILTER )
 /* IPv4-only filter API alternative */
 	if (AF_INET == sa_family) {
