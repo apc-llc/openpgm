@@ -948,7 +948,7 @@ do_csumcpy_mmx (
 
 		sum = _mm_add_pi32 (sum, lo);
 		sum = _mm_add_pi32 (sum, hi);
-#if 1
+#if 0
 		*(int64_t*)dst = _mm_cvtm64_si64 (tmp);
 #else		
 		((int*)dst)[1] = _mm_cvtsi64_si32 (tmp);
