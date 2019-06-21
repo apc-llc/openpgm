@@ -209,11 +209,12 @@ set(sources
 # output
 
 add_library(libpgm STATIC ${sources})
+if (MSVC)
 set_target_properties(libpgm PROPERTIES
 	RELEASE_POSTFIX "${_pgm_COMPILER}-mt-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}"
 	DEBUG_POSTFIX "${_pgm_COMPILER}-mt-gd-${OPENPGM_VERSION_MAJOR}_${OPENPGM_VERSION_MINOR}_${OPENPGM_VERSION_MICRO}")
 set_property(TARGET libpgm PROPERTY POSITION_INDEPENDENT_CODE ON)
-
+endif()
 add_executable(purinsend examples/purinsend.c examples/getopt.c examples/getopt_long.c)
 target_link_libraries(purinsend libpgm)
 if (WIN32)
