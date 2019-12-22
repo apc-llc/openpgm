@@ -19,6 +19,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+// For some reason, Mac OS X has a <netinet.h> that doesn't define
+// IPV6_PKTINFO unless one of __APPLE_USE_RFC_2292 or __APPLE_USE_RFC_3542
+// is set. There is no default. We should #define __APPLE_USE_RFC_3542
+// before including <netinet.h> if we want to get IPV6_PKTINFO on Mac OS X.
+#ifdef __APPLE__
+#define __APPLE_USE_RFC_3542
+#endif
+
 #ifdef HAVE_CONFIG_H
 #	include <config.h>
 #endif
